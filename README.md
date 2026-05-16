@@ -53,20 +53,20 @@ The goal of this project was not only to build a high-performing CNN classifier,
 
 ## Confidence Visualization
 
-_Add screenshot here_
+![Confidence Bars](Images/Confidence_bar.png)
 
 ```markdown
-![Confidence Bars](images/demo2.png)
+
 ```
 
 ---
 
 ## Grad-CAM Explainability
 
-_Add screenshot here_
+![GradCAM](Images/Grad_cam.png)
 
 ```markdown
-![GradCAM](images/gradcam_demo.png)
+
 ```
 
 ---
