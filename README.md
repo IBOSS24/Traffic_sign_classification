@@ -387,18 +387,26 @@ traffic-sign-recognition/
 ├── app.py
 ├── requirements.txt
 ├── README.md
-├── model.keras
-├── traffic.weights.h5
+├── .gitignore
 │
-├── utils/
-│   ├── __init__.py
-│   ├── preprocessing.py
-│   └── gradcam.py
+├── model/
+│   └── traffic.weights.h5
 │
 ├── images/
-│   └── demo_assets/
+│   ├── demo1.png
+│   ├── demo2.png
+│   └── gradcam_demo.png
 │
-└── notebooks/
+├── notebooks/
+│   └── training.ipynb
+│
+├── src/
+│   ├── preprocessing.py
+│   ├── gradcam.py
+│   ├── model_architecture.py
+│   └── utils.py
+│
+└── data/
 ```
 
 ---
