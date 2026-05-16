@@ -484,3 +484,11 @@ Focused on building interpretable, deployable, and operationally meaningful AI s
 - engineering workflows,
 - and real-world problem solving.
 
+---
+# 📬 Contact
+
+📧 **Email:** med.marin17@gmail.com  
+🔗 **LinkedIn:** https://www.linkedin.com/in/mohammed-e-a13664182  
+🐙 **GitHub:** https://github.com/IBOSS24  
+
+
