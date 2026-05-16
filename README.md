@@ -43,10 +43,10 @@ The goal of this project was not only to build a high-performing CNN classifier,
 
 ## Prediction Interface
 
-_Add screenshot here_
+![Predictions](Images/Predictions.png)
 
 ```markdown
-![Predictions](https://github.com/IBOSS24/Traffic_sign_classification/blob/main/Images/Predictions.png)
+
 ```
 
 ---
