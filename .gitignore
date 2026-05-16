@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Conda
+conda-meta/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+
+# Model checkpoints
+*.ckpt
+
+# PyTorch
+*.pt
+*.pth
+
+# TensorFlow
+*.pb
+
+# Environment variables
+.env
+
+# Cache
+.cache/
+
+# Build
+build/
+dist/
+
+# Python packaging
+*.egg-info/
+
+# Ignore large datasets
+data/
+
+# Ignore trained model if too large
+*.keras
+*.h5
+!Model/traffic.weights.h5
