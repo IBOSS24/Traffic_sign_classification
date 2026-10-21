@@ -1,494 +1,146 @@
-# 🚦 Traffic Sign Recognition & Explainable AI System
+# 🚦 Traffic Sign Recognition & Explainable AI
 
-An end-to-end Computer Vision and Deep Learning project for multiclass traffic sign classification using Convolutional Neural Networks (CNNs), deployed with Streamlit and enhanced with Grad-CAM Explainable AI visualizations.
+A **43-class CNN image classifier** with a Streamlit interface, ranked predictions, confidence visualization, and Grad-CAM heatmaps.
 
-This project goes beyond standard image classification by integrating:
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) ![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=flat-square&logo=tensorflow&logoColor=white) ![Keras](https://img.shields.io/badge/Keras-D00000?style=flat-square&logo=keras&logoColor=white) ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat-square&logo=streamlit&logoColor=white) ![NumPy](https://img.shields.io/badge/NumPy-173B57?style=flat-square&logo=numpy&logoColor=white)
 
-- real-world deployment practices,
-- explainability (XAI),
-- confidence analysis,
-- model serialization debugging,
-- deployment engineering,
-- and business-oriented data science thinking.
+[Overview](#-project-overview) · [Demo](#-interface-preview) · [Architecture](#-architecture) · [Quick start](#-quick-start) · [Engineering](#-engineering-decisions) · [Author](#-author)
 
 ---
 
-# 📌 Executive Summary
+## 🎯 Project overview
 
-This project simulates a real-world intelligent transportation AI system capable of recognizing traffic signs from uploaded road images.
+This project explores how to make an image classifier useful beyond a notebook: accept an uploaded image, prepare it consistently, display alternative predictions, and let the user inspect a visual explanation.
 
-While the technical foundation focuses on deep learning and computer vision, the project was intentionally designed to reflect the broader responsibilities of a modern Data Scientist:
+Traffic-sign recognition is relevant to transportation and driver-assistance research. Here, it is implemented as an **interactive computer vision prototype** for exploring predictions and model behavior.
 
-- translating technical outputs into operational value,
-- aligning model performance with business KPIs,
-- communicating system confidence and limitations,
-- and considering deployment reliability in production environments.
+## 🏆 Project highlights
 
-The result is not simply a CNN classifier, but a deployable AI product prototype that demonstrates both technical engineering and stakeholder-oriented thinking.
+- **43 traffic-sign classes** predicted by a TensorFlow/Keras CNN.
+- **Top-3 predictions** and a **top-5 score chart**, alongside the predicted label.
+- **Grad-CAM overlays** for inspecting regions that influence a class prediction.
+- **Consistent preprocessing:** RGB conversion, 50 × 50 resizing, normalization, and batching.
+- **Deployment-focused model loading:** rebuild the architecture, load saved weights, and initialize the graph for explanation.
+- **User feedback:** setup errors, explanation failures, and low-confidence predictions are surfaced in the interface.
 
----
+## 🖼️ Interface preview
 
-# 🎯 Business Problem & Stakeholder Framing
+### Predictions
 
-Traffic sign recognition systems are foundational components of:
+![Traffic-sign prediction interface](Images/Predictions.png)
 
-- Advanced Driver Assistance Systems (ADAS)
-- Autonomous driving pipelines
-- Smart transportation systems
-- Fleet safety monitoring
-- Maritime-port intelligent logistics vehicles
+<details>
+<summary>View confidence and Grad-CAM examples</summary>
 
-A failed classification in these systems can lead to:
+![Prediction confidence visualization](Images/Confidence_bar.png)
 
-- operational safety risks,
-- incorrect vehicle decisions,
-- delayed response times,
-- compliance violations,
-- or financial loss.
+![Grad-CAM visualization](Images/Grad_cam.png)
 
-This project was therefore approached from two complementary perspectives:
+</details>
 
-## 1. Technical Perspective
+## 🏗️ Architecture
 
-Build a high-performing multiclass image classification system capable of accurately recognizing 43 traffic sign categories.
-
-## 2. Operational Perspective
-
-Design a deployable and interpretable AI system capable of supporting:
-
-- user trust,
-- deployment stability,
-- debugging visibility,
-- model monitoring,
-- and explainable decision-making.
-
----
-
-# 📊 KPI-Oriented Thinking
-
-Instead of focusing solely on accuracy, the project considers metrics that matter in operational AI systems.
-
-## Core Technical KPIs
-
-| KPI | Why It Matters |
-|---|---|
-| Validation Accuracy | Measures overall classification quality |
-| Validation Loss | Detects overfitting/generalization issues |
-| Confidence Score | Indicates prediction certainty |
-| Inference Speed | Important for real-time systems |
-| Model Stability | Ensures reliable deployment behavior |
-| False Classification Risk | Critical in safety-sensitive environments |
-
----
-
-## Operational KPIs
-
-| KPI | Operational Impact |
-|---|---|
-| Prediction Explainability | Builds stakeholder trust |
-| Deployment Reliability | Reduces runtime failures |
-| User Interpretability | Improves adoption and debugging |
-| Scalable Architecture | Supports future system growth |
-| Reproducibility | Enables collaborative ML workflows |
-
----
-
-# 🧠 Data Science Mindset Applied
-
-This project intentionally integrates concepts beyond pure modeling:
-
-## Stakeholder Communication
-
-The Streamlit interface was designed to communicate:
-
-- prediction confidence,
-- model interpretation,
-- and classification reasoning
-
-in a human-readable way for non-technical users.
-
----
-
-## Operational Awareness
-
-The project includes:
-
-- deployment-focused serialization handling,
-- TensorFlow/Keras compatibility debugging,
-- modular architecture preparation,
-- and reproducible environment management.
-
-These engineering decisions reflect real production ML workflows.
-
----
-
-## Explainability & Trust
-
-Grad-CAM visualizations were integrated to answer a critical business question:
-
-> "Why did the model make this prediction?"
-
-This improves:
-
-- stakeholder confidence,
-- AI transparency,
-- debugging capability,
-- and responsible AI communication.
-
----
-
-# 🏗️ System Architecture
-
-## Model Pipeline
-
-```text
-Image Upload
-     ↓
-Preprocessing & Normalization
-     ↓
-CNN Feature Extraction
-     ↓
-Softmax Multiclass Classification
-     ↓
-Confidence Analysis
-     ↓
-Grad-CAM Explainability
-     ↓
-Interactive Streamlit Dashboard
+```mermaid
+flowchart TD
+    A["Uploaded JPG or PNG"] --> B["RGB, resize and normalize"]
+    B --> C["43-class CNN"]
+    W["Saved weights"] --> C
+    C --> D["Predicted label and ranked scores"]
+    C --> E["Grad-CAM heatmap"]
+    B --> E
+    D --> F["Streamlit interface"]
+    E --> F
 ```
 
----
+### CNN design
 
-# 🧪 Deep Learning Architecture
+| Stage | Implementation |
+| --- | --- |
+| Input | 50 × 50 RGB image |
+| Convolution block 1 | Conv2D, 64 filters; BatchNormalization; MaxPooling; Dropout 0.25 |
+| Convolution block 2 | Conv2D, 64 filters; BatchNormalization; MaxPooling; Dropout 0.25 |
+| Classification head | Flatten; Dense 128; Dropout 0.5; Dense 43 with softmax |
 
-## CNN Architecture
+See [model architecture](Src/model_architecture.py) and the [training notebook](Notebooks/Traffic_Sign_Classification.ipynb).
 
-```python
-Conv2D → BatchNormalization → MaxPooling → Dropout
-Conv2D → BatchNormalization → MaxPooling → Dropout
-Flatten → Dense → Dropout → Softmax
+## 🚀 Quick start
+
+Clone the repository and create a virtual environment:
+
+```bash
+git clone https://github.com/IBOSS24/Traffic_sign_classification.git
+cd Traffic_sign_classification
+python -m venv .venv
 ```
 
----
+Activate it with `source .venv/bin/activate` on Linux/macOS or `.\.venv\Scripts\Activate.ps1` in Windows PowerShell, then run:
 
-# ⚙️ Training Engineering Decisions
-
-## Optimizer
-
-- AdamW
-
-Chosen for:
-
-- stable convergence,
-- improved generalization,
-- and integrated weight decay regularization.
-
----
-
-## Learning Rate Scheduling
-
-Implemented using:
-
-```python
-ReduceLROnPlateau
+```bash
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python -m streamlit run app.py
 ```
 
-Purpose:
+Open the local URL printed by Streamlit and upload a JPG or PNG. The application requires the included `Model/traffic.weights.h5` and `class_names.json` files. Dependencies include TensorFlow 2.16.1; a fresh environment installation was not verified as part of this documentation refresh.
 
-- adaptive learning optimization,
-- smoother convergence,
-- reduced training instability.
+## ⚙️ Engineering decisions
 
----
+| Decision | Purpose |
+| --- | --- |
+| Rebuild architecture and load weights | Keep inference architecture explicit and avoid relying solely on full-model deserialization |
+| Compatibility fallback for weight loading | Handle supported Keras HDF5 layouts when the standard loader raises a ValueError |
+| Initialize the model with a dummy input | Prepare the model graph before generating explanations |
+| Cache the model and class names | Avoid repeated loading during Streamlit reruns |
+| Separate preprocessing, model loading, Grad-CAM, and utilities | Keep responsibilities readable and easier to maintain |
+| Handle Grad-CAM errors separately | Preserve prediction output when explanation generation fails |
 
-## Regularization Strategy
+The interface marks predictions below a **0.60 softmax score** as low confidence. This is a display heuristic, not a calibrated reliability guarantee. Grad-CAM helps inspect influential regions; it does not prove that the prediction is correct.
 
-Implemented:
+## 📊 Evaluation and scope
 
-- Dropout
-- Weight Decay
-- Batch Normalization
+The notebook contains the training work. A concise, reproducible evaluation report should document held-out performance, class-level errors, and robustness to changes in lighting, viewpoint, and image quality.
 
-Objective:
+| Evaluation area | Question to answer |
+| --- | --- |
+| Per-class precision and recall | Which signs are confused or missed? |
+| Confusion matrix | Which mistakes deserve closer investigation? |
+| Calibration | Do predicted scores reflect observed correctness? |
+| Inference latency | How responsive is the application on a stated device? |
+| Robustness | What happens with blur, poor lighting, or unfamiliar inputs? |
 
-- reduce overfitting,
-- improve generalization,
-- stabilize training.
+The app is a single-image prototype. Safety-critical driving use would require broader validation, temporal processing, and system-level safeguards.
 
----
+## 📂 Repository guide
 
-# 🖼️ Image Preprocessing Pipeline
+| Path | Contents |
+| --- | --- |
+| [app.py](app.py) | Streamlit interface and inference orchestration |
+| [Src/preprocessing.py](Src/preprocessing.py) | RGB conversion, resizing, normalization, and batching |
+| [Src/model_architecture.py](Src/model_architecture.py) | CNN definition and weight loading |
+| [Src/gradcam.py](Src/gradcam.py) | Heatmap generation and overlay |
+| [Src/utils.py](Src/utils.py) | Class names and ranked predictions |
+| [Model/](Model/) | Saved model weights |
+| [Notebooks/](Notebooks/) | Training notebook |
+| [Images/](Images/) | Interface screenshots |
+| [requirements.txt](requirements.txt) | Pinned application dependencies |
 
-Custom preprocessing pipeline includes:
+## 🔭 Next steps
 
-- image resizing,
-- NumPy conversion,
-- normalization,
-- batch preparation.
-
-```python
-images = images / 255
-```
-
-Normalization scales pixel values from:
-
-```text
-0 → 255
-```
-
-to:
-
-```text
-0 → 1
-```
-
-which improves neural network optimization stability.
-
----
-
-# 🔍 Explainable AI (XAI)
-
-## Grad-CAM Integration
-
-The application generates heatmaps showing:
-
-- which image regions influenced predictions,
-- visual attention patterns,
-- model focus areas.
-
-This transforms the model from:
-
-```text
-Black Box AI
-```
-
-into:
-
-```text
-Interpretable AI System
-```
+- Publish a reproducible evaluation summary and investigate class-level errors.
+- Compare the baseline CNN with transfer learning.
+- Add automated preprocessing and inference checks.
+- Package the app with Docker and add CI.
+- Explore model compression and deployment monitoring.
 
 ---
 
-# 🚀 Deployment Engineering Challenges Solved
+## 👨‍💻 Author
 
-During deployment, multiple real-world TensorFlow/Keras serialization issues were encountered and resolved.
+**Mohammed Badr**  
+State-qualified engineer · Moroccan Royal Navy officer · Building a career in maritime Data Science & ML Engineering
 
-## Challenges Solved
+I bring experience at sea and in maritime command centers to my work in applied machine learning. My focus is developing reliable ML systems and applying them to maritime traffic forecasting, vessel behavior analysis, and equipment reliability.
 
-### TensorFlow/Keras version incompatibility
-
-Resolved incompatibilities between:
-
-- TensorFlow 2.15
-- TensorFlow 2.16
-- Keras 3.x
-
----
-
-### Model deserialization errors
-
-Fixed:
-
-```text
-quantization_config
-```
-
-and:
-
-```text
-InputLayer deserialization
-```
-
-issues during deployment.
-
----
-
-### Streamlit deployment debugging
-
-Resolved:
-
-- model loading failures,
-- environment dependency conflicts,
-- TensorFlow import issues,
-- Grad-CAM graph execution errors.
-
----
-
-### Grad-CAM Tensor debugging
-
-Solved:
-
-- KerasTensor vs EagerTensor conflicts,
-- undefined Sequential outputs,
-- gradient extraction problems.
-
----
-
-# 📈 Operational Impact
-
-This project demonstrates how machine learning systems can move from:
-
-```text
-Research Notebook
-```
-
-to:
-
-```text
-Operational AI Prototype
-```
-
-with:
-
-- deployment readiness,
-- user-facing explainability,
-- modular architecture thinking,
-- and engineering robustness.
-
-Potential operational applications include:
-
-- smart transportation systems,
-- autonomous navigation support,
-- driver assistance analytics,
-- fleet safety monitoring,
-- intelligent maritime-port logistics vehicles.
-
----
-
-# 🛠️ Tech Stack
-
-## Languages & Libraries
-
-- Python
-- TensorFlow / Keras
-- NumPy
-- OpenCV
-- Pillow
-- Matplotlib
-- Streamlit
-
----
-
-# 🌐 Deployment Stack
-
-- Streamlit
-- TensorFlow Saved Models
-- Modular Python Architecture
-- Git/GitHub Version Control
-
----
-
-# 📂 Project Structure
-
-```text
-traffic-sign-recognition/
-│
-├── app.py
-├── requirements.txt
-├── README.md
-├── .gitignore
-│
-├── model/
-│   └── traffic.weights.h5
-│
-├── images/
-│   ├── demo1.png
-│   ├── demo2.png
-│   └── gradcam_demo.png
-│
-├── notebooks/
-│   └── training.ipynb
-│
-├── src/
-│   ├── preprocessing.py
-│   ├── gradcam.py
-│   ├── model_architecture.py
-│   └── utils.py
-│
-└── data/
-```
-
----
-
-# 💡 Key Learning Outcomes
-
-This project strengthened practical understanding of:
-
-## Machine Learning
-
-- CNN architectures
-- Multiclass classification
-- Regularization strategies
-- Learning-rate scheduling
-- Model evaluation
-
----
-
-## ML Engineering
-
-- deployment workflows,
-- TensorFlow serialization,
-- environment management,
-- modular architecture,
-- production debugging.
-
----
-
-## Data Science Thinking
-
-- stakeholder framing,
-- KPI-driven evaluation,
-- operational impact analysis,
-- explainability communication,
-- business-oriented AI design.
-
----
-
-# 🏆 Project Highlights
-
-✅ End-to-end Computer Vision pipeline  
-✅ Real-time Streamlit deployment  
-✅ Explainable AI integration (Grad-CAM)  
-✅ Confidence visualization  
-✅ TensorFlow/Keras deployment debugging  
-✅ Business-oriented data science framing  
-✅ Operational KPI awareness  
-✅ Production-style engineering workflow  
-
----
-
-# 📬 Future Improvements
-
-Planned upgrades:
-
-- transfer learning experimentation,
-- model quantization,
-- Docker deployment,
-- CI/CD integration,
-- cloud deployment,
-- model monitoring dashboards,
-- edge-device optimization.
-
----
-
-# 👨‍💻 Author
-
-Mohammed Badr  
-Aspiring Data Scientist | Machine Learning Enthusiast | AI Systems Builder
-
-Focused on building interpretable, deployable, and operationally meaningful AI systems combining:
-
-- machine learning,
-- data science,
-- engineering workflows,
-- and real-world problem solving.
-
----
-# 📬 Contact
-
-📧 **Email:** med.marin17@gmail.com  
-🔗 **LinkedIn:** https://www.linkedin.com/in/mohammed-e-a13664182  
-🐙 **GitHub:** https://github.com/IBOSS24  
-
-
+[![Portfolio](https://img.shields.io/badge/Portfolio-173B57?style=flat-square&logo=github&logoColor=white)](https://github.com/IBOSS24/Portfolio_)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/mohammed-e-a13664182)
+[![Email](https://img.shields.io/badge/Email-Contact-173B57?style=flat-square&logo=gmail&logoColor=white)](mailto:med.marin17@gmail.com)
